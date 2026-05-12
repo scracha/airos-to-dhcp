@@ -1,0 +1,2258 @@
+openapi: 3.0.0
+info:
+  title: airControl REST API
+  termsOfService: ""
+  version: 1.0.0
+servers:
+- url: /api/v1
+paths:
+  /configuration/{configurationId}/content:
+    get:
+      tags:
+      - configuration
+      summary: Returns specified configuration content.
+      operationId: getConfigurationData
+      parameters:
+      - name: configurationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/*: {}
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to retrieve configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device/configuration not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /configuration/info:
+    post:
+      tags:
+      - configuration
+      summary: Returns list of configuration details.
+      operationId: getConfigurationBackupList
+      requestBody:
+        description: List of configuration ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationBackupData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to retrieve configurations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /configuration/info/devices:
+    post:
+      tags:
+      - configuration
+      summary: Returns list of configuration details for specified devices.
+      operationId: getDevicesConfigurationBackupList
+      requestBody:
+        description: List of device ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationBackupData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to retrieve configurations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /configuration/delete:
+    post:
+      tags:
+      - configuration
+      summary: Deletes specified configurations.
+      operationId: deleteConfigurationBackupList
+      requestBody:
+        description: List of configuration ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation. Returns list of deleted configuration
+            ids.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to delete configurations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/mac/{mac}:
+    get:
+      tags:
+      - devices
+      summary: Returns device with specified mac address.
+      operationId: getDevice
+      parameters:
+      - name: mac
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for this device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}:
+    get:
+      tags:
+      - devices
+      summary: Returns specified device.
+      operationId: getDevice
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for this device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices:
+    get:
+      tags:
+      - devices
+      summary: Returns list of devices managed by current user.
+      operationId: getDeviceList
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceList'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/metrics:
+    post:
+      tags:
+      - devices
+      summary: Returns specified device metrics.
+      operationId: getDeviceMetrics
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbstractMetricRequest'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for this device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/alerts:
+    get:
+      tags:
+      - devices
+      summary: Returns all device specific alerts.
+      operationId: getDeviceAlerts
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsListData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    delete:
+      tags:
+      - devices
+      summary: Deletes all device specific alerts.
+      operationId: deleteDeviceAlerts
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        204:
+          description: Successful operation.
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/events:
+    get:
+      tags:
+      - devices
+      summary: Returns device specific events for specified time interval.
+      operationId: getDeviceEvents
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: time
+        in: query
+        schema:
+          type: string
+          enum:
+          - hour
+          - today
+          - week
+          - month
+          - all
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsListData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/location/custom:
+    get:
+      tags:
+      - devices
+      summary: Returns device custom location.
+      operationId: getDeviceCustomLocation
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coordinates'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    post:
+      tags:
+      - devices
+      summary: Sets new device custom coordinates.
+      operationId: setDeviceCustomLocation
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Custom device coordinates.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coordinates'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coordinates'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    delete:
+      tags:
+      - devices
+      summary: Removes device custom coordinates.
+      operationId: deleteDeviceCustomLocation
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        204:
+          description: Successful operation.
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/location/gps:
+    get:
+      tags:
+      - devices
+      summary: Returns device gps location.
+      operationId: getDeviceGPSLocation
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coordinates'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/credentials/clear:
+    patch:
+      tags:
+      - devices
+      summary: Removes access credentials for all devices.
+      operationId: clearDeviceAccessCredentials
+      responses:
+        204:
+          description: Successful operation.
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/webui:
+    post:
+      tags:
+      - devices
+      summary: Returns list of device urls that can be used to open devices Web UI.
+      operationId: openWebUi
+      requestBody:
+        description: List of device ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceUrlsData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for one of the devices.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/{deviceId}/config:
+    get:
+      tags:
+      - devices
+      summary: Returns device latest configuration backup file.
+      operationId: getDeviceConfig
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/*: {}
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for specified device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device/configuration not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/meta-info:
+    get:
+      tags:
+      - devices
+      summary: Returns info about device properties structure.
+      operationId: getMetaProperties
+      responses:
+        200:
+          description: Successful operation.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/export:
+    post:
+      summary: Export personal data according to GDPR.
+      operationId: exportPersonalData
+      requestBody:
+        description: list of device ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            text/plain: {}
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for the list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/update-unms-status:
+    post:
+      summary: Updates UNMS status field.
+      operationId: updateUnmsStatus
+      requestBody:
+        description: list of device ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            text/plain: {}
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for the list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /devices/basic-properties:
+    post:
+      tags:
+      - devices
+      summary: Returns devices basic properties that can be updated.
+      operationId: getProperties
+      requestBody:
+        description: list of device ids.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceUpdateData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for the list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    patch:
+      tags:
+      - devices
+      summary: Update devices basic properties.
+      operationId: setProperties
+      requestBody:
+        description: list of devices basic properties to update.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceUpdateData'
+        required: true
+      responses:
+        204:
+          description: Successful operation.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute the action for this device list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Device not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /login:
+    post:
+      tags:
+      - authorization
+      summary: Logs into airControl instance
+      operationId: login
+      requestBody:
+        description: A JSON object containing the login and password.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthInfo'
+        required: true
+      responses:
+        200:
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserData'
+        401:
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /logout:
+    post:
+      tags:
+      - authorization
+      summary: Logs out current user
+      operationId: logout
+      responses:
+        200:
+          description: User logged out successfully
+  /metric-sets:
+    get:
+      tags:
+      - metrics
+      summary: Returns all available metric sets.
+      operationId: getMetricSets
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldSetList'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    post:
+      tags:
+      - metrics
+      summary: Creates new metric set. To create new metric set at least one field
+        must be specified. Field is identified by 'fieldKind' and 'iface' properties
+        combination. 'iface' property can be null. For available values check '/metric-sets/meta'
+        end point
+      operationId: addMetricSet
+      requestBody:
+        description: New metric set object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldSetData'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldSetData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /metric-sets/{metricSetId}:
+    delete:
+      tags:
+      - metrics
+      summary: Deletes specified metric set.
+      operationId: deleteMetricSet
+      parameters:
+      - name: metricSetId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        204:
+          description: Successful operation.
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Metric set not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    patch:
+      tags:
+      - metrics
+      summary: Updates specified metric set.
+      operationId: updateMetricSet
+      parameters:
+      - name: metricSetId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Metric set object properties that needs to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldSetData'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldSetData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Metric set not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /metric-sets/meta:
+    get:
+      tags:
+      - metrics
+      summary: Returns metric set 'construction blocks' like available fields, colors,
+        interfaces.
+      operationId: getMetricSetsMetaData
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricSetMetaData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /rules:
+    get:
+      tags:
+      - rules
+      summary: Returns list of rules.
+      operationId: getRules
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to get rules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    post:
+      tags:
+      - rules
+      summary: Creates new rule.
+      operationId: addRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to create new rule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /rules/config:
+    get:
+      tags:
+      - rules
+      summary: Returns rules related configuration information.
+      operationId: getRulesConfigurationData
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RulesConfigurationData'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /rules/{ruleId}:
+    delete:
+      tags:
+      - rules
+      summary: Deletes specified rule.
+      operationId: deleteRules
+      parameters:
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        204:
+          description: Successful operation.
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to delete the rule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Rule not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    patch:
+      tags:
+      - rules
+      summary: Updates specified rule.
+      operationId: updateRule
+      parameters:
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to update the rule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Rule not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /rules/{ruleId}/copy:
+    post:
+      tags:
+      - rules
+      summary: Creates specified rule's copy.
+      operationId: copyRule
+      parameters:
+      - name: ruleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to create copy of the rule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Rule not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /views/groups/{groupId}:
+    delete:
+      tags:
+      - groups
+      summary: Deletes device group.
+      operationId: removeGroup
+      parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        204:
+          description: Successful operation.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Group not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    patch:
+      tags:
+      - groups
+      summary: Updates device group.
+      operationId: updateGroup
+      parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Device group object properties that needs to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupData'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Group not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /views/groups/{groupId}/devices:
+    post:
+      tags:
+      - groups
+      summary: Adds devices to device group of type 'manual'.
+      operationId: addDevicesToGroup
+      parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: list of device ids to add to device group.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        404:
+          description: Group not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /views/groups:
+    get:
+      tags:
+      - groups
+      summary: Returns device groups view.
+      operationId: getGroups
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupData'
+        401:
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+    post:
+      tags:
+      - groups
+      summary: Creates new device group
+      operationId: addGroup
+      requestBody:
+        description: Device group object that needs to be added to group view.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupData'
+        required: true
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupData'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        401:
+          description: User not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+        403:
+          description: User not authorized to execute this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /views/topology:
+    get:
+      tags:
+      - views
+      summary: Returns devices topology view
+      operationId: getTopology
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupData'
+        401:
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+  /views:
+    get:
+      tags:
+      - views
+      summary: Returns device views like groups or topology
+      operationId: getViews
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupsView'
+        401:
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestValidationError'
+components:
+  schemas:
+    MetricSetMetaData:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaggedFieldMetaData'
+        colors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Color'
+        ifaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/IFaceMetaData'
+    EventsData:
+      type: object
+      properties:
+        type:
+          type: string
+        deviceId:
+          type: integer
+          format: int32
+        time:
+          type: string
+          format: date-time
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+    FieldSetData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+    IFaceMetaData:
+      type: object
+      properties:
+        iface:
+          type: string
+        name:
+          type: string
+    AbstractTask:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        parentId:
+          type: integer
+          format: int32
+        taskName:
+          type: string
+        status:
+          type: integer
+          format: int32
+        result:
+          type: integer
+          format: int32
+        progress:
+          type: integer
+          format: int32
+        taskMessage:
+          $ref: '#/components/schemas/Message'
+        cause:
+          type: integer
+          format: int32
+        startTime:
+          type: integer
+          format: int32
+        finishTime:
+          type: integer
+          format: int32
+        startedByUser:
+          type: string
+        startedByUserId:
+          type: integer
+          format: int32
+        canceledByUser:
+          type: string
+        uiToken:
+          type: integer
+          format: int32
+        starterSessionId:
+          type: integer
+          format: int32
+        cancelRequested:
+          type: boolean
+        flags:
+          type: integer
+          format: int32
+        ruleId:
+          type: integer
+          format: int32
+        ruleName:
+          type: string
+        schedulingType:
+          type: integer
+          format: int32
+        scheduledStartTime:
+          type: integer
+          format: int32
+        scheduledEndTime:
+          type: integer
+          format: int32
+        schedulingPeriod:
+          type: integer
+          format: int32
+        schedulingPeriodUnit:
+          type: integer
+          format: int32
+        lastSchedulingTime:
+          type: integer
+          format: int32
+        execCount:
+          type: integer
+          format: int32
+        scheduledByUser:
+          type: string
+    PropertyData:
+      type: object
+      properties:
+        name:
+          type: string
+        values:
+          type: object
+        interfaces:
+          type: object
+          additionalProperties:
+            type: string
+        type:
+          type: object
+          additionalProperties:
+            type: object
+        periods:
+          type: array
+          items:
+            type: string
+        units:
+          type: array
+          items:
+            type: string
+    Message:
+      type: object
+      properties:
+        messageCode:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: object
+    UserData:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        currentPassword:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        sessionTimeout:
+          type: integer
+          format: int32
+        role:
+          $ref: '#/components/schemas/RoleData'
+        isNew:
+          type: boolean
+        webProperties:
+          type: string
+        hasDefaultPassword:
+          type: boolean
+    RequestValidationError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDetails'
+    TriggeredTask:
+      type: object
+      properties:
+        startDelay:
+          type: integer
+          format: int32
+        taskTemplateId:
+          type: integer
+          format: int32
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateField'
+    ServerAddress:
+      type: object
+      properties:
+        ip:
+          type: string
+        port:
+          type: integer
+          format: int32
+    HardwareItemData:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        type:
+          type: string
+        parentId:
+          type: integer
+          format: int32
+        location:
+          $ref: '#/components/schemas/Location'
+        summary:
+          $ref: '#/components/schemas/Summary'
+        lastHeartbeat:
+          type: string
+          format: date-time
+        deviceId:
+          type: integer
+          format: int32
+        firmwareVersion:
+          $ref: '#/components/schemas/FirmwareInfo'
+        latestVersion:
+          $ref: '#/components/schemas/FirmwareInfo'
+        isLatestVersion:
+          type: boolean
+        isConfigurationSupported:
+          type: boolean
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+    RoleData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        permissions:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - MANAGE_SERVER
+            - MANAGE_USERS
+            - MANAGE_DEVICES
+            - MONITOR_DEVICES
+            - MONITOR
+            - CONTROL
+    Field:
+      type: object
+      properties:
+        name:
+          type: string
+        fieldKind:
+          type: integer
+          format: int32
+        iface:
+          type: string
+        units:
+          type: string
+        color:
+          $ref: '#/components/schemas/Color'
+    EventsListData:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventsData'
+        count:
+          type: integer
+          format: int32
+    FieldSetList:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldSetData'
+    DeviceData:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        type:
+          type: string
+        parentId:
+          type: integer
+          format: int32
+        location:
+          $ref: '#/components/schemas/Location'
+        summary:
+          $ref: '#/components/schemas/Summary'
+        lastHeartbeat:
+          type: string
+          format: date-time
+        deviceId:
+          type: integer
+          format: int32
+        firmwareVersion:
+          $ref: '#/components/schemas/FirmwareInfo'
+        latestVersion:
+          $ref: '#/components/schemas/FirmwareInfo'
+        isLatestVersion:
+          type: boolean
+        isConfigurationSupported:
+          type: boolean
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+    Status:
+      type: object
+      properties:
+        busy:
+          type: boolean
+        online:
+          type: boolean
+        reporting:
+          type: boolean
+        ignored:
+          type: boolean
+        hasAuthInfo:
+          type: boolean
+    TaskTemplate:
+      type: object
+      properties:
+        type:
+          type: string
+        template:
+          $ref: '#/components/schemas/AbstractTask'
+    AuthInfo:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        eulaAccepted:
+          type: boolean
+        verifyCsrfToken:
+          type: boolean
+    ConfigurationBackupData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        deviceId:
+          type: integer
+          format: int32
+        time:
+          type: string
+          format: date-time
+        crc:
+          type: integer
+          format: int64
+        latest:
+          type: boolean
+        details:
+          type: string
+    GroupMemberData:
+      type: object
+      properties:
+        deviceId:
+          type: integer
+          format: int32
+        mac:
+          type: string
+        mode:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    Coordinates:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+    Color:
+      type: object
+      properties:
+        colorId:
+          type: integer
+          format: int32
+        colorName:
+          type: string
+    RulesConfigurationData:
+      type: object
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyData'
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunctionData'
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskTemplate'
+    AbstractMetricRequest:
+      type: object
+      properties:
+        from:
+          type: integer
+          format: int64
+        to:
+          type: integer
+          format: int64
+        scale:
+          type: string
+          enum:
+          - seconds
+          - minutes
+          - hours
+    ParamsData:
+      type: object
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        label:
+          type: string
+        values:
+          type: object
+          additionalProperties:
+            type: string
+    DeviceList:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HardwareItemData'
+        lastTimeTopologyUpdated:
+          type: string
+          format: date-time
+    DeviceUrl:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        url:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDetails'
+    MessageDetails:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        propertyName:
+          type: string
+    AlertsListData:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertData'
+        count:
+          type: integer
+          format: int32
+    FunctionData:
+      type: object
+      properties:
+        name:
+          type: string
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParamsData'
+    GroupData:
+      type: object
+      properties:
+        parentId:
+          type: integer
+          format: int32
+        groupId:
+          type: integer
+          format: int32
+        type:
+          type: string
+        inclusionType:
+          type: string
+          enum:
+          - all
+          - manual
+          - filtered
+        name:
+          type: string
+        expression:
+          type: string
+        subgroupExpression:
+          type: string
+        groupBy:
+          type: string
+          enum:
+          - none
+          - before
+          - after
+        deviceCount:
+          type: integer
+          format: int32
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMemberData'
+        permissions:
+          type: array
+          items:
+            type: string
+    FirmwareInfo:
+      type: object
+      properties:
+        full:
+          type: string
+        major:
+          type: integer
+          format: int32
+        minor:
+          type: integer
+          format: int32
+        patch:
+          type: integer
+          format: int32
+        specialPrefix:
+          type: string
+        platformPrefix:
+          type: string
+        buildNumber:
+          type: integer
+          format: int32
+        firmwareGroup:
+          type: string
+        prereleasePrefix:
+          type: string
+        gitHash:
+          type: string
+    DeviceUpdateData:
+      type: object
+      properties:
+        type:
+          type: string
+        ip:
+          type: string
+        domainName:
+          type: string
+        sshUserName:
+          type: string
+        sshPassword:
+          type: string
+        sshPort:
+          type: integer
+          format: int32
+        rememberSshSettings:
+          type: boolean
+        httpPort:
+          type: integer
+          format: int32
+        useHttps:
+          type: boolean
+        description:
+          type: string
+        tag:
+          type: string
+        parentId:
+          type: integer
+          format: int32
+        uplinkType:
+          type: integer
+          format: int32
+        overriddenServerAddress:
+          $ref: '#/components/schemas/ServerAddress'
+        membershipTypeGateway:
+          type: boolean
+        runDiscovery:
+          type: boolean
+        lockPositionInTopology:
+          type: boolean
+        lockIpAddress:
+          type: boolean
+        connectedDirectly:
+          type: boolean
+        sessionId:
+          type: integer
+          format: int32
+        deviceId:
+          type: integer
+          format: int32
+    GroupsView:
+      type: object
+      properties:
+        topology:
+          $ref: '#/components/schemas/GroupData'
+        groups:
+          $ref: '#/components/schemas/GroupData'
+    Summary:
+      type: object
+      properties:
+        subsystemId:
+          type: string
+        deviceNodeName:
+          type: string
+        productCategory:
+          type: string
+    AlertData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        deviceId:
+          type: integer
+          format: int32
+        time:
+          type: string
+          format: date-time
+        type:
+          type: string
+        ruleName:
+          type: string
+    TaggedFieldMetaData:
+      type: object
+      properties:
+        fieldKind:
+          type: integer
+          format: int32
+        fieldName:
+          type: string
+        units:
+          type: string
+        allowedInterfaces:
+          type: array
+          items:
+            type: string
+    Rule:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        parentId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        generatesAlert:
+          type: boolean
+        alertType:
+          type: integer
+          format: int32
+        active:
+          type: boolean
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TriggeredTask'
+        repeatType:
+          type: integer
+          format: int32
+        repeatInterval:
+          type: integer
+          format: int32
+        isSystem:
+          type: boolean
+        expression:
+          type: string
+        description:
+          type: string
+    TemplateField:
+      type: object
+      properties:
+        type:
+          type: integer
+          format: int32
+        name:
+          type: string
+        index:
+          type: integer
+          format: int32
+        value:
+          type: object
+        required:
+          type: boolean
+    Location:
+      type: object
+      properties:
+        custom:
+          $ref: '#/components/schemas/Coordinates'
+        gps:
+          $ref: '#/components/schemas/Coordinates'
+    DeviceUrlsData:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceUrl'
